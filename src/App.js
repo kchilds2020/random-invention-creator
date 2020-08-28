@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState, useEffect} from 'react';
 import './App.css';
+import axios from 'axios'
+import randomWords from 'random-words'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () =>{ 
+
+  const [adjective, setAdjective] = useState('');
+  const [noun, setNoun] = useState('');
+  const [isLoading,setLoading] = useState(false)
+
+  useEffect(() => {
+    const getWords = async () => {
+      
+      let nounFound = false
+      let adjFound = false
+      let count = 0;
+        try {
+            setLoading(true)
+            while(nounFound === false || adjFound === false){
+              let random = randomWords()
+              const word = await axios.get(`https://www.dictionaryapi.com/api/v3/references/collegiate/json/${random}?key=01c77953-d1ac-4bda-b229-71633cd93e15`)
+              console.log(word.data[0].fl)
+              let wordType = word.data[0].fl
+              if(wordType === 'adjective') {
+                adjFound = true;
+                setAdjective(random)
+              }
+              if(wordType === 'noun'){
+                nounFound = true;
+                setNoun(random)
+              }
+              count++;
+            }
+          console.log(`${count} requests`)
+          setLoading(false)
+            
+        } catch (error) {
+        }
+    }
+    getWords()
+  }, [])
+
+    return (
+      isLoading ? <div>LOADING</div> : <div>{adjective} {noun}</div>
+    )
 }
 
 export default App;
