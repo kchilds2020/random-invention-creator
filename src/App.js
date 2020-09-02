@@ -42,7 +42,10 @@ const App = () =>{
   }, [])
 
     return (
-      isLoading ? <div>LOADING</div> : <div>{adjective} {noun}</div>
+      <div style = {{maxWidth: '1000px', margin: '50px auto', boxShadow: '0px 0px 4px #aaa', padding: '20px', borderRadius: '8px'}}>
+        <h1 style={{textAlign: 'center'}}>Random Idea Generator</h1>
+        {isLoading ? <h2>LOADING</h2> : <h2 style = {{textAlign: 'center'}}>{adjective} {noun}</h2>}
+      </div>
     )
 }
 
